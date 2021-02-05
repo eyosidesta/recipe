@@ -11,21 +11,26 @@
           contain
           src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
           transition="scale-transition"
-          width="40"
-        />
+          width="40"/>
           <h1>Recipe</h1>
         <!-- <router-link><h1>re2</h1></router-link> -->
       </div>
 
       <v-spacer></v-spacer>
-
+      <router-link to="/ingredients-list/">
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
         text
       >
-        <span class="mr-2">user</span>
+        <span class="mr-2">Ingredients</span>
       </v-btn>
+      </router-link>
+      <router-link to="/">
+      <v-btn
+        text
+      >
+        <span class="mr-2">Home</span>
+      </v-btn>
+      </router-link>
       </v-app-bar>
 </template>
 

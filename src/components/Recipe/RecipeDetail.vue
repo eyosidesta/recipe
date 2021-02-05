@@ -203,7 +203,6 @@ export default {
                 }
             });
             this.$router.push('/');
-            console.log("yes we do " + id);
         },
         updateRecipe() {
             const {id, title, description, image} = this.$data.recipe[0];

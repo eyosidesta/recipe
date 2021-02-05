@@ -14,6 +14,7 @@ import VueRouter from 'vue-router';
 import RecipeList from './components/Recipe/RecipeLists';
 import RecipeDetail from './components/Recipe/RecipeDetail';
 import Ingredients from './components/Ingredients';
+import INgredientsList from './components/IngredientsList';
 
 
 Vue.config.productionTip = false
@@ -42,6 +43,10 @@ const routes = [
     name: 'ingredients',
     component: Ingredients,
     props: true
+  },
+  {
+    path: '/ingredients-list',
+    component: INgredientsList
   }
 ]
 

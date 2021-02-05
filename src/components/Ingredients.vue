@@ -11,13 +11,12 @@
     >
 
       <v-toolbar-title >
-          <v-btn @click.stop="dialog_box = true" color="teal" dark>
-          Add Ingredient</v-btn></v-toolbar-title>
           <!-- ///////////////// INgredient add dialog box starts -->
-
+          <v-btn @click.stop="ingredient_dialog = true" color="teal" dark>
+          Add Ingredient</v-btn></v-toolbar-title>
 
                     <v-dialog
-                    v-model="dialog_box"
+                    v-model="ingredient_dialog"
                     max-width="450"
                     >
                     <v-card>
@@ -29,12 +28,14 @@
                         <v-col cols="12">
                             <v-text-field
                                 label="Ingredient*"
+                                v-model="ingredient.title"
                                 required
                             ></v-text-field>
                             </v-col>
                             <v-col cols="12">
                             <v-text-field
                                 label="Unit*"
+                                v-model="ingredient.unit"
                                 required
                             ></v-text-field>
                             </v-col>
@@ -46,22 +47,21 @@
                         <v-btn
                             color="green darken-1"
                             text
-                            @click="dialog_box = false"
+                            @click="ingredient_dialog = false"
                         >
-                            Disagree
+                            cancel
                         </v-btn>
 
                         <v-btn
                             color="green darken-1"
                             text
-                            @click="dialog_box = false"
+                            @click="addIngredient"
                         >
-                            Agree
+                            Add Ingredient
                         </v-btn>
                         </v-card-actions>
                     </v-card>
                     </v-dialog>
-  <!-- </v-row> -->
           <!-- ///////////////// Ingredient add dialog box ends -->
 
       <v-spacer></v-spacer>
@@ -120,20 +120,24 @@
           <td v-if="ingredient.quantities.length !== 0">{{ingredient.quantities[0].amount}} 
               <!-- <v-btn @click.stop="edit_dialog = true">edit</v-btn> -->
             <!-- //////////////////// updte dialog starts here           -->
-             <!-- <v-icon @click.stop="edit_dialog = true">mdi-dots-vertical</v-icon> -->
+                <v-btn @click.stop="update_amount_dialog = true">edit</v-btn>
+                 </td>
+              <!-- ////////////////////// update dialog ends here  -->
+         
+          <td v-else>
+              <!-- ////////////// dialog to add amount starts here -->
+            <v-icon v-on:click="addAmountTriggered(ingredient.id)" @click.stop="add_amount_dialog = true">mdi-dots-vertical</v-icon>
+    
+        </td>
+        </tr>
+      </tbody>
+    </template>
+  </v-simple-table>
+  <!-- //////////////////////////// table ends here -->
 
-            <!-- <template> -->
-  <v-row justify="center">
-    <v-btn
-      color="primary"
-      dark
-      @click.stop="dialog = true"
-    >
-      Open Dialog
-    </v-btn>
-    <v-icon @click.stop="edit_dialog = true">mdi-dots-vertical</v-icon>
-    <v-dialog
-      v-model="edit_dialog"
+  <!-- //////////////////// dialog add amount starts here -->
+<v-dialog
+      v-model="add_amount_dialog"
       max-width="290"
     >
       <v-card>
@@ -142,7 +146,11 @@
         </v-card-title>
 
         <v-card-text>
-          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+          <v-text-field
+            label="Amount*"
+            v-model="amount"
+            required
+        ></v-text-field>
         </v-card-text>
 
         <v-card-actions>
@@ -151,78 +159,63 @@
           <v-btn
             color="green darken-1"
             text
-            @click="edit_dialog = false"
+            @click="add_amount_dialog = false"
           >
-            Disagree
+            cancel
           </v-btn>
 
           <v-btn
             color="green darken-1"
             text
-            @click="edit_dialog = false"
+            @click="addAmount(amount)"
           >
-            Agree
+            Add Amount
           </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-row>
-<!-- // </template> -->
-            <!-- ////////////////////// update dialog ends here  -->
-          </td>
-          <td v-else>
-              <!-- ////////////// dialog to add amount starts here -->
-            <v-icon @click.stop="dialog = true">mdi-dots-vertical</v-icon>
+  <!-- //////////////////// dialog add amount ends here -->
 
-            <v-dialog
-            v-model="dialog"
-            max-width="290"
-            >
-            <v-card>
-                <v-card-title class="headline">
-                Add Amount
-                </v-card-title>
+  <!-- dialog for update amount start here -->
+    <v-dialog
+      v-model="update_amount_dialog"
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="headline">
+          Use Google's location service?
+        </v-card-title>
 
-                <v-card-text>
-                <v-col cols="12">
-                    <v-text-field
-                        label="Amount*"
-                        v-model="amount"
-                        required
-                    ></v-text-field>
-                    </v-col>
-                </v-card-text>
+        <v-card-text>
+          <v-text-field
+            label="Amount*"
+            v-model="amount"
+            required
+        ></v-text-field>
+        </v-card-text>
 
-                <v-card-actions>
-                <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-spacer></v-spacer>
 
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="cancelClicked"
-                >
-                    cancel
-                </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="update_amount_dialog = false"
+          >
+            cancel
+          </v-btn>
 
-                <v-btn
-                    color="green darken-1"
-                    text
-                    @click="addAmount(ingredient.id, amount)"
-                >
-                    Add Amount
-                </v-btn>
-                </v-card-actions>
-            </v-card>
-            </v-dialog>
-        </td>
-  
-
-          <!-- ////////////// dialog to add amount end here -->
-        </tr>
-      </tbody>
-    </template>
-  </v-simple-table>
-  <!-- //////////////////////////// table ends here -->
+          <v-btn
+            color="green darken-1"
+            text
+            @click="updateAmount(amount)"
+          >
+            update Amount
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  <!-- dialog for update amount end here -->
 </div>
 </template>
 
@@ -291,8 +284,8 @@ const ADD_AMOUNT = gql`mutation add_amount($recipe_ingredient_id: Int!, $amount:
     }
 }
 `;
-const ADD_INGREDIENT = gql`mutation add_ingredient($title, String!, $unit String!) {
-    insert_ingredient(objects: [
+const ADD_INGREDIENT = gql`mutation add_ingredient($title: String!, $unit: String!) {
+    insert_ingredients(objects: [
         {
             title: $title,
             unit: $unit
@@ -328,23 +321,21 @@ export default {
         },
     },
     methods: {
-        cancelClicked() {
-            // console.log("cancel clicked");
-            
-            this.$data.dialog = false;
+        addAmountTriggered(id) {
+            this.$data.recipe_ingredient_id = id;
         },
-        addAmount(id, amount) {
+        addAmount(amount) {
             this.$apollo.mutate({
                 mutation: ADD_AMOUNT,
                 variables: {
-                    recipe_ingredient_id: id,
+                    recipe_ingredient_id: this.$data.recipe_ingredient_id,
                     amount: amount
                 },
                 refetchQueries: ['get_recipe_ingredient'],
             });
             this.$data.amount = 0;
-            this.$data.dialog = false;
-            this.$router.go();
+            this.$data.add_amount_dialog = false;
+            // this.$router.go();
         },
         updateAmount(id, amount) {
             console.log(id + " " + amount);
@@ -359,10 +350,19 @@ export default {
                 },
                 refetchQueries: ['get_recipe_ingredient'],
             });
-            console.log("yes we do " + this.$data.recipe_ingredient[4].ingredient.id + " recipe_id " + this.$props.id);
+//            console.log("yes we do " recipe_id " + this.$props.id);
         },
         addIngredient() {
-            console.log("hello");
+            const {title, unit} = this.$data.ingredient;
+            this.$apollo.mutate({
+                mutation: ADD_INGREDIENT,
+                variables: {
+                    title,
+                    unit
+                },
+                refetchQueries: ["get_ingredients"],
+            });
+            this.$data.ingredient_dialog = false;
         },
         isIngredientAdded(id) {
             // this.$data.recipe_ingredient.map(function(ele) {
@@ -379,9 +379,10 @@ export default {
     },
     data: function() {
         return {
-            dialog_box: false,
-            edit_dialog: false,
+            ingredient_dialog: false,
+            update_amount_dialog: false,
             dialog: false,
+            add_amount_dialog: false,
             kd: ["1", "3", "4"],
             amount: 0,
             ingredients: [{
@@ -406,7 +407,11 @@ export default {
                     amount: '',
                 }],
             }],
-            
+            ingredient: {
+                title: '',
+                unit: ''
+            },
+            recipe_ingredient_id: 0,
         }
     }
 }
